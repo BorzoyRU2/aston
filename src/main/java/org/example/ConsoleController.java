@@ -1,9 +1,11 @@
 package org.example;
 
+import org.example.filler.ArrayFiller;
+import org.example.filler.FileFiller;
+import org.example.filler.ManualFiller;
+import org.example.filler.RandomFiller;
 import org.example.model.Student;
-import org.example.validation.*;
 import org.example.sort.*;
-import org.example.filler.*;
 
 //import org.example.search.StudentSearcher;
 //import org.example.writer.ResultFileWriter;
@@ -11,42 +13,20 @@ import org.example.filler.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-/**
- * ConsoleController — управляющий класс приложения.
- *
- * Отвечает за:
- * - цикл взаимодействия с пользователем
- * - приём выбора режима заполнения массива
- * - приём выбора стратегии сортировки
- * - приём выбора поля для сортировки
- * - вывод результатов
- *
- * Задачи для команды:
- * - ArrayFiller (заполнение массива) — Участник 1
- * - SortStrategy / SortContext (стратегии сортировки) — Участник 2
- * - Student + StudentValidator (модель и валидация) — Участник 3
- * - EvenFieldSorter (дополнительное задание) — Участник 4
- */
-
 public class ConsoleController {
     private static final String SEPARATOR = "─".repeat(50);
 
     private final Scanner scanner;
     private final SortContext sortContext;
-    private final ResultFileWriter fileWriter;
+    //private final ResultFileWriter fileWriter;
 
-    // Хранит последний созданный массив — нужен для поиска и записи
     private ArrayList<Student> lastStudents;
 
     public ConsoleController() {
         this.scanner = new Scanner(System.in);
         this.sortContext = new SortContext();
-        this.fileWriter = new ResultFileWriter();
+        //this.fileWriter = new ResultFileWriter();
     }
-
-    // ──────────────────────────────────────────────────
-    //  Главный цикл
-    // ──────────────────────────────────────────────────
 
     public void run() {
         printWelcome();
@@ -69,10 +49,6 @@ public class ConsoleController {
         scanner.close();
     }
 
-    // ──────────────────────────────────────────────────
-    //  Основная сортировка
-    // ──────────────────────────────────────────────────
-
     private void handleSort() {
         ArrayList<Student> students = buildArray();
         if (students == null) return;
@@ -87,12 +63,8 @@ public class ConsoleController {
 
         String title = "Результат сортировки (" + strategy.getName() + " по полю \"" + field + "\"):";
         printResult(students, title);
-        offerSaveToFile(students, title);
+        //offerSaveToFile(students, title);
     }
-
-    // ──────────────────────────────────────────────────
-    //  Дополнительная сортировка (чётные / нечётные)
-    // ──────────────────────────────────────────────────
 
     private void handleSortEvenField() {
         ArrayList<Student> students = buildArray();
@@ -108,12 +80,8 @@ public class ConsoleController {
 
         String title = "Результат (чётные " + numericField + " — отсортированы, нечётные — на месте):";
         printResult(students, title);
-        offerSaveToFile(students, title);
+        //offerSaveToFile(students, title);
     }
-
-    // ──────────────────────────────────────────────────
-    //  Многопоточный поиск
-    // ──────────────────────────────────────────────────
 
     private void handleSearch() {
         if (lastStudents == null || lastStudents.isEmpty()) {
@@ -124,48 +92,32 @@ public class ConsoleController {
         String field = chooseField();
         String value = readLine("Введите значение для поиска: ");
 
-        StudentSearcher searcher = new StudentSearcher(4); // 4 потока
-        try {
-            int count = searcher.countOccurrences(lastStudents, field, value);
-            System.out.println(SEPARATOR);
-            System.out.println("Поиск по полю \"" + field + "\", значение: \"" + value + "\"");
-            System.out.println("Найдено вхождений: " + count);
-            System.out.println(SEPARATOR);
+        // StudentSearcher searcher = new StudentSearcher(4);
+        // try {
+        //     int count = searcher.countOccurrences(lastStudents, field, value);
+        //     System.out.println("Найдено вхождений: " + count);
+        // } catch (InterruptedException e) {
+        //     System.out.println("[Ошибка] Поиск прерван: " + e.getMessage());
+        //     Thread.currentThread().interrupt();
+        // }
 
-            String title = "Поиск по полю \"" + field + "\", значение \"" + value + "\", найдено: " + count;
-            offerSaveToFile(lastStudents, title);
-        } catch (InterruptedException e) {
-            System.out.println("[Ошибка] Поиск прерван: " + e.getMessage());
-            Thread.currentThread().interrupt();
-        }
+        System.out.println("[В разработке] Многопоточный поиск будет добавлен позже.");
     }
 
-    // ──────────────────────────────────────────────────
-    //  Сохранение в файл
-    // ──────────────────────────────────────────────────
-
-    private void offerSaveToFile(ArrayList<Student> students, String title) {
-        System.out.println("Сохранить результат в файл?");
-        System.out.println("  1. Да");
-        System.out.println("  0. Нет");
-        int choice = readInt("Ваш выбор: ", 0, 1);
-        if (choice == 0) return;
-
-        System.out.print("Путь к файлу (Enter — results.txt): ");
-        String path = scanner.nextLine().trim();
-        if (path.isEmpty()) path = "results.txt";
-
-        try {
-            fileWriter.writeResults(students, title, path);
-            System.out.println("Результат сохранён в файл: " + path);
-        } catch (Exception e) {
-            System.out.println("[Ошибка записи] " + e.getMessage());
-        }
-    }
-
-    // ──────────────────────────────────────────────────
-    //  Построение массива
-    // ──────────────────────────────────────────────────
+    // private void offerSaveToFile(ArrayList<Student> students, String title) {
+    //     System.out.println("Сохранить результат в файл? (1 — да, 0 — нет)");
+    //     int choice = readInt("Ваш выбор: ", 0, 1);
+    //     if (choice == 0) return;
+    //     System.out.print("Путь к файлу (Enter — results.txt): ");
+    //     String path = scanner.nextLine().trim();
+    //     if (path.isEmpty()) path = "results.txt";
+    //     try {
+    //         fileWriter.writeResults(students, title, path);
+    //         System.out.println("Сохранено: " + path);
+    //     } catch (Exception e) {
+    //         System.out.println("[Ошибка записи] " + e.getMessage());
+    //     }
+    // }
 
     private ArrayList<Student> buildArray() {
         printFillMenu();
@@ -194,10 +146,6 @@ public class ConsoleController {
         }
     }
 
-    // ──────────────────────────────────────────────────
-    //  Выбор стратегии сортировки
-    // ──────────────────────────────────────────────────
-
     private SortStrategy chooseSortStrategy() {
         System.out.println(SEPARATOR);
         System.out.println("Выберите алгоритм сортировки:");
@@ -217,10 +165,6 @@ public class ConsoleController {
         };
     }
 
-    // ──────────────────────────────────────────────────
-    //  Выбор поля
-    // ──────────────────────────────────────────────────
-
     private String chooseField() {
         System.out.println(SEPARATOR);
         System.out.println("Выберите поле:");
@@ -239,19 +183,15 @@ public class ConsoleController {
     private String chooseNumericField() {
         System.out.println(SEPARATOR);
         System.out.println("Числовое поле для чётных/нечётных:");
-        System.out.println("  1. Номер группы (groupNumber)");
+        System.out.println("  1. Средний балл (gpa)");
         System.out.println("  2. Номер зачётной книжки (recordBookId)");
 
         return switch (readInt("Поле: ", 1, 2)) {
-            case 1 -> "groupNumber";
+            case 1 -> "gpa";
             case 2 -> "recordBookId";
             default -> throw new IllegalStateException("Недопустимый выбор");
         };
     }
-
-    // ──────────────────────────────────────────────────
-    //  Вывод
-    // ──────────────────────────────────────────────────
 
     private void printResult(ArrayList<Student> students, String title) {
         System.out.println(SEPARATOR);
@@ -271,10 +211,6 @@ public class ConsoleController {
         }
     }
 
-    // ──────────────────────────────────────────────────
-    //  Меню и приветствие
-    // ──────────────────────────────────────────────────
-
     private void printWelcome() {
         System.out.println("╔══════════════════════════════════════════════════╗");
         System.out.println("║       Приложение сортировки студентов            ║");
@@ -285,8 +221,8 @@ public class ConsoleController {
         System.out.println("\n" + SEPARATOR);
         System.out.println("Главное меню:");
         System.out.println("  1. Отсортировать массив студентов");
-        System.out.println("  2. Сортировка чётных по числовому полю (доп. задание)");
-        System.out.println("  3. Поиск студента — многопоточный (доп. задание)");
+        System.out.println("  2. Сортировка чётных по числовому полю (доп. задание 1)");
+        System.out.println("  3. Поиск студента — многопоточный (доп. задание 3)");
         System.out.println("  4. Справка");
         System.out.println("  0. Выход");
         System.out.println(SEPARATOR);
@@ -313,10 +249,6 @@ public class ConsoleController {
         System.out.println("  Поиск работает по последнему созданному массиву.");
         System.out.println(SEPARATOR);
     }
-
-    // ──────────────────────────────────────────────────
-    //  Утилиты ввода
-    // ──────────────────────────────────────────────────
 
     private int readInt(String prompt, int min, int max) {
         while (true) {

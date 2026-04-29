@@ -1,6 +1,5 @@
 package org.example.model;
 
-
 public class Student {
 
     private final String groupNumber;
