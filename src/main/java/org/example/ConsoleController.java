@@ -1,5 +1,15 @@
 package org.example;
 
+import org.example.filler.ArrayFiller;
+import org.example.filler.FileFiller;
+import org.example.filler.ManualFiller;
+import org.example.filler.RandomFiller;
+import org.example.model.Student;
+import org.example.sort.SortContext;
+import org.example.sort.SortStrategy;
+
+import java.util.Scanner;
+
 /**
  * ConsoleController — управляющий класс приложения.
  *
@@ -52,10 +62,10 @@ public class ConsoleController {
 
 
     private void handleSort() {
-        //Student[] students = buildArray();
+        Student[] students = buildArray();
         if (students == null) return;
 
-        //SortStrategy strategy = chooseSortStrategy();
+        SortStrategy strategy = chooseSortStrategy();
         String field = chooseField();
 
         sortContext.setStrategy(strategy);
@@ -160,11 +170,11 @@ public class ConsoleController {
     private String chooseNumericField() {
         System.out.println(SEPARATOR);
         System.out.println("Числовое поле для чётных/нечётных:");
-        System.out.println("  1. Номер группы (groupNumber)");
+        System.out.println("  1. Средний балл (gpa)");
         System.out.println("  2. Номер зачётной книжки (recordBookId)");
 
         return switch (readInt("Поле: ", 1, 2)) {
-            case 1 -> "groupNumber";
+            case 1 -> "gpa";
             case 2 -> "recordBookId";
             default -> throw new IllegalStateException("Недопустимый выбор");
         };
@@ -228,7 +238,7 @@ public class ConsoleController {
         System.out.println("  Поля класса Student:");
         System.out.println("    groupNumber   — номер группы (строка, напр. «КІ-23»)");
         System.out.println("    gpa           — средний балл (0.0 – 100.0)");
-        System.out.println("    recordBookId  — номер зачётной книжки (строка/число)");
+        System.out.println("    recordBookId  — номер зачётной книжки (число)");
         System.out.println("  Форматы файла (CSV): groupNumber,gpa,recordBookId");
         System.out.println("  Пример строки: КІ-23,87.5,12345");
         System.out.println(SEPARATOR);
