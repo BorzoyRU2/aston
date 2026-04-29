@@ -5,9 +5,9 @@ import org.example.filler.FileFiller;
 import org.example.filler.ManualFiller;
 import org.example.filler.RandomFiller;
 import org.example.model.Student;
-import org.example.sort.SortContext;
-import org.example.sort.SortStrategy;
+import org.example.sort.*;
 
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -62,7 +62,7 @@ public class ConsoleController {
 
 
     private void handleSort() {
-        Student[] students = buildArray();
+        List<Student> students = buildArray();
         if (students == null) return;
 
         SortStrategy strategy = chooseSortStrategy();
@@ -79,7 +79,7 @@ public class ConsoleController {
     // ──────────────────────────────────────────────────
 
     private void handleSortEvenField() {
-        Student[] students = buildArray();
+        List<Student> students = buildArray();
         if (students == null) return;
 
         SortStrategy strategy = chooseSortStrategy();
@@ -96,7 +96,7 @@ public class ConsoleController {
     //  Построение массива
     // ──────────────────────────────────────────────────
 
-    private Student[] buildArray() {
+    private List<Student> buildArray() {
         printFillMenu();
         int fillMode = readInt("Способ заполнения: ", 1, 3);
         int length = readInt("Длина массива (1–100): ", 1, 100);
@@ -112,7 +112,7 @@ public class ConsoleController {
         };
 
         try {
-            Student[] students = filler.fill(length);
+            List<Student> students = filler.fill(length);
             System.out.println(SEPARATOR);
             System.out.println("Массив создан. Исходные данные:");
             printStudents(students);
@@ -185,19 +185,19 @@ public class ConsoleController {
     // ──────────────────────────────────────────────────
 
 
-    private void printResult(Student[] students, String title) {
+    private void printResult(List<Student> students, String title) {
         System.out.println(SEPARATOR);
         System.out.println(title);
         printStudents(students);
         System.out.println(SEPARATOR);
     }
 
-    private void printStudents(Student[] students) {
+    private void printStudents(List<Student> students) {
         System.out.printf("%-6s %-18s %-8s %-14s%n",
                 "№", "Номер группы", "ГПА", "№ зачёт. кн.");
         System.out.println("─".repeat(50));
-        for (int i = 0; i < students.length; i++) {
-            Student s = students[i];
+        for (int i = 0; i < students.size(); i++) {
+            Student s = students.get(i);
             System.out.printf("%-6d %-18s %-8.2f %-14s%n",
                     i + 1, s.getGroupNumber(), s.getGpa(), s.getRecordBookId());
         }

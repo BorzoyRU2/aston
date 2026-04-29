@@ -2,6 +2,8 @@ package org.example.sort;
 
 import org.example.model.Student;
 
+import java.util.List;
+
 public class SortContext {
 
     private SortStrategy strategy;
@@ -10,7 +12,7 @@ public class SortContext {
         this.strategy = strategy;
     }
 
-    public void sort(Student[] array, String field) {
+    public void sort(List<Student> list, String field) {
 
         if (strategy == null) {
             throw new IllegalStateException(
@@ -18,10 +20,10 @@ public class SortContext {
             );
         }
 
-        strategy.sort(array, field);
+        strategy.sort(list, field);
     }
 
-    public void sortEvenFieldOnly(Student[] array, String field) {
+    public void sortEvenFieldOnly(List<Student> list, String field) {
 
         if (strategy == null) {
             throw new IllegalStateException(
@@ -31,6 +33,6 @@ public class SortContext {
 
         EvenFieldSorter sorter = new EvenFieldSorter();
 
-        sorter.sortEvenOnly(array, field, strategy);
+        sorter.sortEvenOnly(list, field, strategy);
     }
 }

@@ -7,26 +7,24 @@ import java.util.List;
 
 public class EvenFieldSorter {
 
-    public void sortEvenOnly(Student[] array,
+    public void sortEvenOnly(List<Student> list,
                              String numericField,
                              SortStrategy strategy) {
 
-        // Защита от null/пустого массива
-        if (array == null || array.length == 0) {
+        if (list == null || list.isEmpty()) {
             return;
         }
 
         List<Integer> evenIndexes = new ArrayList<>();
         List<Student> evenStudents = new ArrayList<>();
 
-        // Ищем только чётные элементы
-        for (int i = 0; i < array.length; i++) {
+        for (int i = 0; i < list.size(); i++) {
 
-            long value = getNumericValue(array[i], numericField);
+            long value = getNumericValue(list.get(i), numericField);
 
             if (value % 2 == 0) {
                 evenIndexes.add(i);
-                evenStudents.add(array[i]);
+                evenStudents.add(list.get(i));
             }
         }
 
@@ -34,42 +32,26 @@ public class EvenFieldSorter {
             return;
         }
 
-        // Конвертация в массив
-        Student[] evenArray = evenStudents.toArray(new Student[0]);
+        strategy.sort(evenStudents, numericField);
 
-        // Используем существующую стратегию
-        strategy.sort(evenArray, numericField);
-
-        // Возвращаем обратно ТОЛЬКО на места чётных
         for (int i = 0; i < evenIndexes.size(); i++) {
-            array[evenIndexes.get(i)] = evenArray[i];
+            list.set(evenIndexes.get(i), evenStudents.get(i));
         }
     }
 
-    /**
-     * Получение числового значения поля.
-     */
     private long getNumericValue(Student student, String field) {
 
         return switch (field) {
 
-            case "recordBookId" -> {
-                try {
-                    yield Long.parseLong(student.getRecordBookId());
-                } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException(
-                            "recordBookId должен содержать только цифры"
-                    );
-                }
-            }
+            case "recordBookId" ->
+                    Long.parseLong(student.getRecordBookId());
 
             case "gpa" ->
                     Math.round(student.getGpa());
 
-            default ->
-                    throw new IllegalArgumentException(
-                            "Поле не является числовым: " + field
-                    );
+            default -> throw new IllegalArgumentException(
+                    "Поле не является числовым"
+            );
         };
     }
 }
