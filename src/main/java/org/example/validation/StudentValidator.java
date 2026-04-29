@@ -22,8 +22,8 @@ public final class StudentValidator {
             throw new IllegalArgumentException("Номер зачётной книжки не может быть пустым");
         }
 
-        if (!recordBookId.matches("[a-zA-Zа-яА-Я0-9]+")) {
-            throw new IllegalArgumentException("Номер зачётной книжки должен содержать только буквы или цифры");
+        if (!recordBookId.matches("\\d+")) {
+            throw new IllegalArgumentException("Номер зачётной книжки должен содержать только цифры");
         }
     }
 
