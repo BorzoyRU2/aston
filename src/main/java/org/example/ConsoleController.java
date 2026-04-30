@@ -5,6 +5,7 @@ import org.example.filler.FileFiller;
 import org.example.filler.ManualFiller;
 import org.example.filler.RandomFiller;
 import org.example.model.Student;
+import org.example.search.StudentSearcher;
 import org.example.sort.*;
 
 //import org.example.search.StudentSearcher;
@@ -12,6 +13,7 @@ import org.example.sort.*;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.concurrent.ExecutionException;
 
 public class ConsoleController {
     private static final String SEPARATOR = "─".repeat(50);
@@ -92,16 +94,17 @@ public class ConsoleController {
         String field = chooseField();
         String value = readLine("Введите значение для поиска: ");
 
-        // StudentSearcher searcher = new StudentSearcher(4);
-        // try {
-        //     int count = searcher.countOccurrences(lastStudents, field, value);
-        //     System.out.println("Найдено вхождений: " + count);
-        // } catch (InterruptedException e) {
-        //     System.out.println("[Ошибка] Поиск прерван: " + e.getMessage());
-        //     Thread.currentThread().interrupt();
-        // }
-
-        System.out.println("[В разработке] Многопоточный поиск будет добавлен позже.");
+         StudentSearcher searcher = new StudentSearcher(4);
+         try {
+             int count = searcher.countOccurrences(lastStudents, field, value);
+             System.out.println("Найдено вхождений: " + count);
+         } catch (NumberFormatException e) {
+             System.out.println("[Ошибка] Средний балл должен быть числом");
+         }
+         catch (InterruptedException | ExecutionException e) {
+             System.out.println("[Ошибка] Поиск прерван: " + e.getMessage());
+             Thread.currentThread().interrupt();
+         }
     }
 
     // private void offerSaveToFile(ArrayList<Student> students, String title) {
