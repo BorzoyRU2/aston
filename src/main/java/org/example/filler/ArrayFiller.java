@@ -2,7 +2,9 @@ package org.example.filler;
 
 import org.example.model.Student;
 
+import java.util.ArrayList;
+
 public interface ArrayFiller {
 
-    Student[] fill(int length);
+    ArrayList<Student> fill(int length);;
 }

@@ -3,6 +3,7 @@ package org.example.filler;
 import org.example.model.Student;
 
 import java.util.Random;
+import java.util.ArrayList;
 
 public class RandomFiller implements ArrayFiller {
 
@@ -13,15 +14,17 @@ public class RandomFiller implements ArrayFiller {
     private final Random random = new Random();
 
     @Override
-    public Student[] fill(int length) {
-        Student[] students = new Student[length];
+    public ArrayList<Student> fill(int length) {
+        ArrayList<Student> students = new ArrayList<>();
 
         for (int i = 0; i < length; i++) {
-            students[i] = new Student.Builder()
+            Student student = new Student.Builder()
                     .groupNumber(generateGroupNumber())
                     .gpa(generateGpa())
                     .recordBookId(generateRecordBookId())
                     .build();
+
+            students.add(student);
         }
 
         return students;
