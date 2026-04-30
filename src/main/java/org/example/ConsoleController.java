@@ -6,6 +6,7 @@ import org.example.filler.ManualFiller;
 import org.example.filler.RandomFiller;
 import org.example.model.Student;
 import org.example.sort.*;
+import org.example.writer.ResultFileWriter;
 
 //import org.example.search.StudentSearcher;
 //import org.example.writer.ResultFileWriter;
@@ -18,14 +19,14 @@ public class ConsoleController {
 
     private final Scanner scanner;
     private final SortContext sortContext;
-    //private final ResultFileWriter fileWriter;
+    private final ResultFileWriter fileWriter;
 
     private ArrayList<Student> lastStudents;
 
     public ConsoleController() {
         this.scanner = new Scanner(System.in);
         this.sortContext = new SortContext();
-        //this.fileWriter = new ResultFileWriter();
+        this.fileWriter = new ResultFileWriter();
     }
 
     public void run() {
@@ -63,7 +64,7 @@ public class ConsoleController {
 
         String title = "Результат сортировки (" + strategy.getName() + " по полю \"" + field + "\"):";
         printResult(students, title);
-        //offerSaveToFile(students, title);
+        offerSaveToFile(students, title);
     }
 
     private void handleSortEvenField() {
@@ -80,7 +81,7 @@ public class ConsoleController {
 
         String title = "Результат (чётные " + numericField + " — отсортированы, нечётные — на месте):";
         printResult(students, title);
-        //offerSaveToFile(students, title);
+        offerSaveToFile(students, title);
     }
 
     private void handleSearch() {
@@ -104,20 +105,20 @@ public class ConsoleController {
         System.out.println("[В разработке] Многопоточный поиск будет добавлен позже.");
     }
 
-    // private void offerSaveToFile(ArrayList<Student> students, String title) {
-    //     System.out.println("Сохранить результат в файл? (1 — да, 0 — нет)");
-    //     int choice = readInt("Ваш выбор: ", 0, 1);
-    //     if (choice == 0) return;
-    //     System.out.print("Путь к файлу (Enter — results.txt): ");
-    //     String path = scanner.nextLine().trim();
-    //     if (path.isEmpty()) path = "results.txt";
-    //     try {
-    //         fileWriter.writeResults(students, title, path);
-    //         System.out.println("Сохранено: " + path);
-    //     } catch (Exception e) {
-    //         System.out.println("[Ошибка записи] " + e.getMessage());
-    //     }
-    // }
+     private void offerSaveToFile(ArrayList<Student> students, String title) {
+         System.out.println("Сохранить результат в файл? (1 — да, 0 — нет)");
+         int choice = readInt("Ваш выбор: ", 0, 1);
+         if (choice == 0) return;
+         System.out.print("Путь к файлу (Enter — results.txt): ");
+         String path = scanner.nextLine().trim();
+         if (path.isEmpty()) path = "results.txt";
+         try {
+             fileWriter.writeResults(students, title, path);
+             System.out.println("Сохранено: " + path);
+         } catch (Exception e) {
+             System.out.println("[Ошибка записи] " + e.getMessage());
+         }
+     }
 
     private ArrayList<Student> buildArray() {
         printFillMenu();
