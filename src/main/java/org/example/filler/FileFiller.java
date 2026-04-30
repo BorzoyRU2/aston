@@ -6,6 +6,7 @@ import org.example.validation.StudentValidator;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class FileFiller implements ArrayFiller {
 
@@ -16,8 +17,8 @@ public class FileFiller implements ArrayFiller {
     }
 
     @Override
-    public Student[] fill(int length) {
-        Student[] students = new Student[length];
+    public ArrayList<Student> fill(int length) {
+        ArrayList<Student> students = new ArrayList<>();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
             String line;
@@ -31,10 +32,9 @@ public class FileFiller implements ArrayFiller {
                     );
                 }
 
-                // Валидация строки
                 StudentValidator.validateCsvLine(line);
 
-                students[i] = parseStudent(line);
+                students.add(parseStudent(line));
             }
 
             return students;

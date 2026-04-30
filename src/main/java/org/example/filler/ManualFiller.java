@@ -3,6 +3,7 @@ package org.example.filler;
 import org.example.model.Student;
 import org.example.validation.StudentValidator;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ManualFiller implements ArrayFiller {
@@ -14,8 +15,8 @@ public class ManualFiller implements ArrayFiller {
     }
 
     @Override
-    public Student[] fill(int length) {
-        Student[] students = new Student[length];
+    public ArrayList<Student> fill(int length) {
+        ArrayList<Student> students = new ArrayList<>();
 
         for (int i = 0; i < length; i++) {
             System.out.println("Введите данные студента №" + (i + 1));
@@ -24,11 +25,13 @@ public class ManualFiller implements ArrayFiller {
             double gpa = readGpa();
             String recordBookId = readRecordBookId();
 
-            students[i] = new Student.Builder()
+            Student student = new Student.Builder()
                     .groupNumber(groupNumber)
                     .gpa(gpa)
                     .recordBookId(recordBookId)
                     .build();
+
+            students.add(student);
         }
 
         return students;
