@@ -5,6 +5,8 @@ import org.example.validation.StudentValidator;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class ManualFiller implements ArrayFiller {
 
@@ -16,25 +18,16 @@ public class ManualFiller implements ArrayFiller {
 
     @Override
     public ArrayList<Student> fill(int length) {
-        ArrayList<Student> students = new ArrayList<>();
-
-        for (int i = 0; i < length; i++) {
-            System.out.println("Введите данные студента №" + (i + 1));
-
-            String groupNumber = readGroupNumber();
-            double gpa = readGpa();
-            String recordBookId = readRecordBookId();
-
-            Student student = new Student.Builder()
-                    .groupNumber(groupNumber)
-                    .gpa(gpa)
-                    .recordBookId(recordBookId)
-                    .build();
-
-            students.add(student);
-        }
-
-        return students;
+        return IntStream.range(0, length)
+                .mapToObj(i -> {
+                    System.out.println("Введите данные студента №" + (i + 1));
+                    return new Student.Builder()
+                            .groupNumber(readGroupNumber())
+                            .gpa(readGpa())
+                            .recordBookId(readRecordBookId())
+                            .build();
+                })
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     private String readGroupNumber() {
