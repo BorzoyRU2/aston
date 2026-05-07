@@ -2,8 +2,10 @@ package org.example.filler;
 
 import org.example.model.Student;
 
-import java.util.Random;
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class RandomFiller implements ArrayFiller {
 
@@ -15,19 +17,17 @@ public class RandomFiller implements ArrayFiller {
 
     @Override
     public ArrayList<Student> fill(int length) {
-        ArrayList<Student> students = new ArrayList<>();
+        return Stream.generate(this::generateStudent)
+                .limit(length)
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
 
-        for (int i = 0; i < length; i++) {
-            Student student = new Student.Builder()
-                    .groupNumber(generateGroupNumber())
-                    .gpa(generateGpa())
-                    .recordBookId(generateRecordBookId())
-                    .build();
-
-            students.add(student);
-        }
-
-        return students;
+    private Student generateStudent() {
+        return new Student.Builder()
+                .groupNumber(generateGroupNumber())
+                .gpa(generateGpa())
+                .recordBookId(generateRecordBookId())
+                .build();
     }
 
     private String generateGroupNumber() {
