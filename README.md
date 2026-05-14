@@ -58,7 +58,7 @@ mvn test
 
 ## Авторы проекта
 
-* (Осипов Олег)[https://github.com/BorzoyRU2]
-* (Мирослав Сошич)[https://github.com/FunnyMogila]
+* [Осипов Олег](https://github.com/BorzoyRU2)
+* [Мирослав Сошич](https://github.com/FunnyMogila)
 * Остальные участники команды Aston
 ---
